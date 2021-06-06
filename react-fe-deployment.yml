@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fe-deployment
+  
+spec:
+
+  replicas: 1
+  selector:
+      matchLabels:
+         tier: front-end   
+  template:
+    metadata:
+      labels:
+        app: fe4be
+        tier: front-end
+    spec:
+      containers:
+        - name: feapp
+          image: naveenkrishiv/react-fe-app:latest
+          ports:
+           - containerPort: 3000
+          envFrom:
+          - configMapRef:
+             name: fe-be-config
+             
+
+  

@@ -1,0 +1,53 @@
+
+Steps for packaging and running a React FE and Sprinbtoot BE inside k8s
+Requirements : minikube / k8s cluster
+
+-- to connect to docker daemon inside minikube
+eval $(minikube docker-env)
+
+-- Build a docker image from the Dockerfile under folder : /Users/Navin/udemy-courses/react-course/react-youtube 
+docker build -t react-fe-app -f react-fe4beDockerfile .
+
+-- Run the docker image exposing to outside on port 80
+docker container run -d -it -p 80:3000  --name react-fe-app react-fe-app:latest
+
+-- Tag the image for docker hub
+docker tag react-fe-app naveenkrishiv/react-fe-app
+
+-- Push to docker hub
+docker push naveenkrishiv/react-fe-app:latest
+
+( To stop all the running container )
+docker container stop $(docker ps -a -q)
+
+-- Build a docker image for the be spboot app for the react fe
+docker build -t spboot-react-be-app -f spboot-be4feDockerfile .
+
+-- Run the docker image exposing to outside on port 8080
+docker container run -d -it -p 8080:8080  --name spboot-react-be spboot-react-be-app:latest
+
+-- Tag the image for docker hub
+docker tag spboot-react-be-app naveenkrishiv/spboot-react-be-app
+
+-- Push to docker hub
+docker push naveenkrishiv/spboot-react-be-app:latest
+
+-- create k8s deployment for the docker image
+kubectl apply -f react-fe-deployment.yml
+
+-- create nodePort service for the react-fe deployment
+kubectl apply -f react-fe-service.yml
+
+-- get the exposed node ip from minikube to access the fe-service
+minikube service fe-service --url 
+
+-- create k8s deployment for the BE docker image
+kubectl apply -f spboot-be-deployment.yml
+
+-- create nodePort service for the be-fe deployment
+kubectl apply -f spboot-be-service.yml
+
+-- get the exposed node ip from minikube to access the fe-service
+minikube service be-service --url 
+
+

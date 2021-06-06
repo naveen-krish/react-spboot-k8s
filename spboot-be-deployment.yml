@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: be-deployment
+  
+spec:
+
+  replicas: 1
+  selector:
+      matchLabels:
+         tier: back-end   
+  template:
+    metadata:
+      labels:
+        app: be4fe
+        tier: back-end
+    spec:
+      containers:
+       - name: beapp
+         image: naveenkrishiv/spboot-react-be-app:latest
+         ports:
+           - containerPort: 8080
+         
+        
+  

@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: fe-be-config
+ 
+data: 
+   spboot.api.url: "http://192.168.64.4:32322"
+  
